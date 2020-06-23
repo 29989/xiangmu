@@ -1,0 +1,23 @@
+spring:
+  datasource:
+      username: root
+      password: 1234
+      url: jdbc:mysql://localhost:3306/itravel?characterEncoding=utf-8&zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=Asia/Shanghai&useSSL=false
+      driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    host: localhost
+    port: 6379
+
+mybatis:
+  type-aliases-package: com.qhit.itravel.entity
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+files:
+  path: ${file-path:/Users/files}
