@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+    <script src="js/jquery-1.12.4.js"></script>
+
+</head>
+
+<body style="width:900px; margin:0px auto;">
+	<div style="width:900px; text-align:center">
+    	<h2>图书信息列表</h2>
+    </div>
+    <div style="width:880px; text-align:right; padding-right:20px; line-height:25px; height:25px;"><a href="addBook.html">添加图书信息</a></div>
+    <div style="width:900px; text-align:center">
+    	<form action="" method="post">
+    	图书类型：
+    	  
+    	  <select name="typeid" id="typeid">
+    	    <option value="-1">-请选择图书类型--</option>
+  	      </select>
+    	作者：
+    	<input name="author" type="text" id="author" size="10" />
+    	价格：
+    	<input name="min_price" type="text" id="min_price" size="10" />
+    	到
+    	<input name="max_price" type="text" id="max_price" size="10" />
+    	<input type="submit" name="btnSearch" id="btnSearch" value="查询图书" />
+    	</form>
+    </div>
+    <div style="width:900px; text-align:center">
+      <table width="900" border="1" cellspacing="0" cellpadding="0">
+
+      </table>
+    </div>
+
+<script>
+
+     function do_detail(id) {
+         $.get(
+             "detail.html",
+             {"bookid":id}
+         );
+         //window.location.href="detail.html?bookid="+id;
+     }
+
+
+    function do_update(id) {
+        window.location.href="updateBook.html?bookid="+id;
+    }
+
+
+    function do_delete(id) {
+
+        if(confirm("您确定要删除吗")){
+            $.post(
+                "delete",//url
+                {"bookid":id},
+                function (data) {
+                    //tr
+                    var sel = "#"+id;
+                    var tr = $(sel);
+
+                    if(data.flag==true){
+                        alert("删除成功")
+                        //jquery对象转原生JS对象
+                        $("table")[0].lastChild.removeChild(tr[0]);
+                    }else {
+                        alert("删除失败");
+                    }
+                }
+            );
+        }else {
+
+        }
+
+    }
+
+
+    //jquery的入口函数
+    $(function () {
+        //给后台发送ajax请求获取全部的图书数据
+        $.post("getAll",
+            function (data) {
+            var tr = '<tr>\n' +
+                '          <td>编号</td>\n' +
+                '          <td>图书名称</td>\n' +
+                '          <td>价格</td>\n' +
+                '          <td>出版时间</td>\n' +
+                '          <td>作者</td>\n' +
+                '          <td>图书类型</td>\n' +
+                '          <td>详细</td>\n' +
+                '          <td>删除</td>\n' +
+                '          <td>修改</td>\n' +
+                '        </tr>';
+               if(data.flag==true){
+                   //有数据
+                   $(data.data).each(function () {
+                       tr+='<tr id="'+this.bookid+'">';
+                       //开始列
+                       tr+='<td>'+this.bookid+'</td>';
+                       tr+='<td>'+this.bookname+'</td>';
+                       tr+='<td>'+this.price+'</td>';
+                       tr+='<td>'+this.pubtime+'</td>';
+                       tr+='<td>'+this.author+'</td>';
+                       tr+='<td>'+this.typeid+'</td>';
+                       tr+=' <td><a href="javascript:do_detail('+this.bookid+')">详细</a></td>';
+                       tr+=' <td><a href="javascript:do_delete('+this.bookid+')">删除</a></td>';
+                       tr+=' <td><a href="javascript:do_update('+this.bookid+')">修改</a></td>';
+                       //结束列
+                       tr+='</tr>';
+                   });
+
+                   //拼接分页条
+                   tr+='        <tr>\n' +
+                       '          <td colspan="9" align="center" valign="middle"><a href="#">首页</a>上一页下一页<a href="#">末页</a></td>\n' +
+                       '        </tr>';
+
+
+                   //将tr在table显示或者说挂载tr
+                   $("table").html(tr);
+               }else {
+                   alert("查询失败");
+               }
+            });
+    });
+</script>
+</body>
+</html>

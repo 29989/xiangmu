@@ -1,0 +1,126 @@
+<!-- 头部 start -->
+    <header id="header">
+        <div class="top_banner">
+            <img src="images/top_banner.jpg" alt="">
+        </div>
+        <div class="shortcut">
+
+            <!-- 未登录状态  -->
+
+
+            <div class="login_out" id="login_out">
+                <a href="login.html">登录</a>
+                <a href="register.html">注册</a>
+            </div>
+            <!-- 登录状态  -->
+            <div class="login" id="login">
+                <input type="hidden" id="uid1" name="uid1">
+                <span id="span"></span>
+                <span id="span1"></span>
+                <a href="" onclick="out1()">退出</a>
+            </div>
+        </div>
+        <div class="header_wrap">
+            <div class="topbar">
+                <div class="logo">
+                    <a href="/"><img src="images/logo.jpg" alt=""></a>
+                </div>
+                <div class="search">
+                    <span id="lx"></span>
+                    <input name="" id="name1" type="text" placeholder="请输入路线名称" class="search_input">
+                    <input type="hidden" id="rname" name="rname">
+                    <a href="javascript:do_page1()" class="search-button" >搜索</a>
+                </div>
+                <div class="hottel">
+                    <div class="hot_pic">
+                        <img src="images/hot_tel.jpg" alt="">
+                    </div>
+                    <div class="hot_tel">
+                        <p class="hot_time">客服热线(9:00-6:00)</p>
+                        <p class="hot_num">400-618-9090</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- 头部 end -->
+     <!-- 首页导航 -->
+    <div class="navitem">
+        <ul class="nav">
+
+        </ul>
+    </div>
+<script>
+    function do_page1() {
+
+        var name = $(".search_input").val()
+        $.post("souSuo",{"name":name},function (data) {
+            $("#name1").attr("placeholder",name)
+
+            if (data.flag==true){
+                window.location.href ="route_list.html"
+            }else {
+                window.location.href ="route_list.html"
+            }
+        })
+
+
+    }
+
+    $(function () {
+
+
+
+        $.post("navitem11",function (data) {
+            if(data.flag==true){
+                var li = '<li class="nav-active"><a href="index.html">首页</a></li>'
+                $(data.data).each(function () {
+                    if(data.data.cid==this){
+                        li+='<li ><a href="route_list.html?cid='+this.cid+'" style="background-color: red">'+this.cname+'</a></li>'
+                    }else {
+                        li+='<li><a href="route_list.html?cid='+this.cid+'">'+this.cname+'</a></li>'
+
+                    }
+
+                })
+                li+='<li><a href="favoriterank.html">收藏排行榜</a></li>'
+
+                $(".nav").html(li)
+
+            }
+        })
+
+        $.post("index11", function (data) {
+            if (data.data != null) {
+                $("#span").html("欢迎您：" + data.data.username)
+
+                $("#uid1").val(data.data.uid)
+
+                $("#login_out").css("display", "none")
+                var a = '<a href="myfavorite.html?uid='+data.data.uid+'" class="collection">我的收藏</a>'
+                $("#span1").html(a)
+
+
+            } else {
+                $("#login").css("display", "none")
+            }
+        })
+
+
+
+
+    })
+
+    function out1() {
+        $.post("out1",function (data) {
+            if (data.data==null){
+                alert("退出成功")
+
+            }else {
+                alert("退出失败")
+            }
+        })
+
+    }
+</script>
+    

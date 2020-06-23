@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.java.mapper.UserMapper">
+    <insert id="addUser" parameterType="com.java.entity.User">
+        INSERT into tab_user(username,password,name,birthday,sex,telephone,email)
+        VALUES (#{username},#{password},#{name},#{birthday},#{sex},#{telephone},#{email})
+    </insert>
+    <update id="update">
+        UPDATE tab_route SET COUNT= COUNT+1 WHERE rid = #{rid}
+    </update>
+
+    <update id="updataCountqx">
+        UPDATE tab_route SET COUNT= COUNT-1 WHERE rid = #{rid}
+    </update>
+
+
+    <select id="getUserName" resultType="com.java.entity.User">
+        SELECT * FROM tab_user WHERE username = #{username}
+    </select>
+    <select id="getUserNamePass" resultType="com.java.entity.User">
+        SELECT * FROM tab_user WHERE username = #{username} and password = #{password}
+    </select>
+    <select id="getCategory" resultType="com.java.entity.Category">
+        SELECT * FROM tab_category
+    </select>
+    <select id="getPageData" resultType="com.java.entity.Route">
+        SELECT * FROM tab_route WHERE  cid =#{cid}
+
+    </select>
+
+    <resultMap id="routeMap" type="com.java.entity.Route">
+        <!--处理路线信息-->
+        <id property="rid" column="rrid"></id>
+        <result property="rname" column="rname"></result>
+        <result property="price" column="price"></result>
+        <result property="routeIntroduce" column="routeIntroduce"></result>
+
+        
+        <!--处理商家信息-->
+        <association property="seller" javaType="Seller">
+            <id property="sid" column="sid"></id>
+            <result property="sname" column="sname"></result>
+            <result property="consphone" column="consphone"></result>
+            <result property="address" column="address"></result>
+        </association>
+        <!--处理分类信息信息-->
+        <association property="category" javaType="com.java.entity.Category">
+            <id property="cid" column="tcid"></id>
+            <result property="cname" column="cname"></result>
+        </association>
+        <!--处理图片信息-->
+        <collection property="routeImgList" ofType="com.java.entity.RouteImg" >
+            <id property="rgid" column="igid"></id>
+            <result property="bigPic" column="bigPic"></result>
+            <result property="smallPic" column="smallPic"></result>
+        </collection>
+
+    </resultMap>
+
+
+    <select id="getPageDataImg" resultMap="routeMap">
+        SELECT r.`rid` rrid,r.`rname`,r.`price`,r.`routeIntroduce`,t.`cid` tcid,t.`cname`,i.`rgid` igid,i.`bigPic`,i.`smallPic`,s.*
+        FROM tab_route r
+        INNER JOIN tab_category t
+        ON r.`cid` = t.`cid`
+        INNER JOIN tab_route_img i
+        ON r.`rid` = i.`rid`
+        INNER JOIN tab_seller s
+        ON r.`sid` = s.`sid`
+        WHERE r.`rid` = #{rid}
+        </select>
+
+    <resultMap id="favoriteMap" type="com.java.entity.Route">
+        <!--处理路线信息-->
+        <id property="rid" column="rrid"></id>
+        <result property="rname" column="rname"></result>
+        <result property="price" column="price"></result>
+        <result property="routeIntroduce" column="routeIntroduce"></result>
+
+
+        <!--处理商家信息-->
+        <association property="seller" javaType="Seller">
+            <id property="sid" column="sid"></id>
+            <result property="sname" column="sname"></result>
+            <result property="consphone" column="consphone"></result>
+            <result property="address" column="address"></result>
+        </association>
+        <!--处理分类信息信息-->
+        <association property="category" javaType="com.java.entity.Category">
+            <id property="cid" column="tcid"></id>
+            <result property="cname" column="cname"></result>
+        </association>
+        <!--处理图片信息-->
+        <collection property="routeImgList" ofType="com.java.entity.RouteImg" >
+            <id property="rgid" column="igid"></id>
+            <result property="bigPic" column="bigPic"></result>
+            <result property="smallPic" column="smallPic"></result>
+        </collection>
+
+    </resultMap>
+
+
+    <select id="getFavorite" resultMap="favoriteMap">
+          SELECT r.`rid` rrid,r.`rname`,r.`price`,r.`routeIntroduce`,t.`cid` tcid,t.`cname`,i.`rgid` igid,i.`bigPic`,i.`smallPic`,s.*
+FROM tab_favorite f
+INNER JOIN tab_route r
+ON f.`rid` = r.`rid`
+INNER JOIN tab_route_img i
+ON r.`rid` = i.`rid`
+INNER JOIN tab_category t
+ON r.`cid` = t.`cid`
+INNER JOIN tab_seller s
+ON r.`sid` = s.`sid`
+WHERE f.`uid` = #{uid}
+    </select>
+    <select id="selectId" resultType="com.java.entity.Favorite">
+        SELECT * FROM  tab_favorite where rid = #{rid} and uid = #{uid}
+    </select>
+    <select id="selectCount" resultType="java.lang.Integer">
+        SELECT count FROM tab_route WHERE rid = #{rid}
+    </select>
+    <select id="selectPaiXu" resultType="com.java.entity.Route">
+        SELECT * FROM tab_route ORDER BY COUNT  DESC
+    </select>
+
+
+    <select id="getPageData1" resultType="com.java.entity.Route">
+        SELECT * FROM tab_route WHERE  rname LIKE concat('%',#{rname},'%')
+    </select>
+    <delete id="getRidUid2" parameterType="java.lang.Integer">
+        DELETE FROM tab_favorite
+        <if test="rid != null and uid !=null" >
+           WHERE rid = #{rid} and uid =#{uid}
+        </if>
+    </delete>
+
+
+    <insert id="getRidUid" parameterType="com.java.entity.Favorite">
+        INSERT into tab_favorite()
+        VALUES (#{rid},#{date},#{uid})
+    </insert>
+
+</mapper>

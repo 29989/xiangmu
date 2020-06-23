@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>无标题文档</title>
+    <script src="js/jquery-1.12.4.js"></script>
+</head>
+
+<body>
+	<div style="width:500px; margin:0px auto">
+   	  <div style="width:500px; margin:0px auto; text-align:center"><h2>图书详细信息</h2></div>
+        <div>
+            <table width="500" border="1" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="145">图书编号</td>
+        <td width="349">&nbsp;</td>
+      </tr>
+      <tr>
+        <td>图书名称</td>
+        <td >&nbsp;</td>
+      </tr>
+      <tr>
+        <td>图书价格</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>出版时间</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>图书作者</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>图书类型</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="2" align="center" valign="middle"><input type="button" name="btnReturn" id="btnReturn" value="返回首页" onclick="history.go(-1)"  /></td>
+        </tr>
+    </table>
+    </div>
+    </div>
+
+
+<script>
+    $(function () {
+        //取到id
+        var url = window.location.href;
+        var id = url.substring(url.indexOf("=")+1,url.length);
+
+
+        //发送ajax请求，获取VO信息
+
+
+        $.post("detail",//请求的URL
+            {"bookid":id},//参数
+            //回调函数
+            function (data) {
+                if(data.flag==true){
+                    $("tr:eq(0)>td:eq(1)").html(data.data.bookid);
+                    $("tr:eq(1)>td:eq(1)").html(data.data.bookname);
+                    $("tr:eq(2)>td:eq(1)").html(data.data.price);
+                    $("tr:eq(3)>td:eq(1)").html(data.data.pubtime);
+                    $("tr:eq(4)>td:eq(1)").html(data.data.author);
+                    $("tr:eq(5)>td:eq(1)").html(data.data.typename);
+
+                }else {
+                    alert("查询失败");
+                }
+            });
+
+    });
+
+</script>
+</body>
+</html>
