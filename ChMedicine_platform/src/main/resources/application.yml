@@ -1,0 +1,14 @@
+server:
+  port: 3600
+spring:
+  thymeleaf:
+    cache: false
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/zhongyao?useSSL=true&serverTimezone=GMT&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+  mvc:
+    favicon:
+      enabled=false:
